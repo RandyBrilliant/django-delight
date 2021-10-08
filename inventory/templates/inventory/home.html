@@ -1,0 +1,72 @@
+{% extends 'inventory/base.html' %}
+
+{% block title %}Django Delight{% endblock %}
+
+{% block content %}
+<h2 class="fw-bold mb-3">Ingredients Stock</h2>
+<table class="table table-striped table-dark table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Ingredient Name</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Unit</th>
+      <th scope="col">Unit Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ingredient in ingredients %}
+      <tr style="cursor: pointer" onClick="window.location='{{ingredient.get_absolute_url}}'">
+        <td>{{ingredient.name}}</td>
+        <td>{{ingredient.qty.normalize}} {{ingredient.unit}}</td>
+        <td>{{ingredient.unit}}</td>
+        <td>${{ingredient.unit_price.normalize}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a type="button" class="btn btn-outline-light mb-5" href="{% url 'ingredient' %}">See More</a>
+<h2 class="fw-bold mb-3">Purchase History</h2>
+<table class="table table-striped table-dark table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Menu Item</th>
+      <th scope="col">Time Purchased</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for purchase in purchases %}
+      <tr>
+        <td>{{purchase.menu_item.name}}</td>
+        <td>{{purchase.timestamp}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a type="button" class="btn btn-outline-light mb-5" href="{% url 'purchase' %}">See More</a>
+<h2 class="fw-bold mb-3">Menu Items</h2>
+<div class="row d-flex justify-content-around">
+  {% for menu in menus %}
+    <div class="card mb-3 col-6 bg-dark border border-light m-3" style="max-width: 540px;">
+      <div class="row g-0">
+        <div class="col-md-4">
+          <a href="{{menu.get_absolute_url}}" class="stretched-link">
+            <img src="{{menu.imageURL}}" class="img-fluid rounded-start" style="object-fit: contain; height: 100%" alt="{{menu.name}}" />
+          </a>
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">{{menu.name}}</h5>
+            <ol class="card-text">
+              {% for list in menu.reciperequirement_set.all %}
+                <li>{{list.ingredient.name}}<span class="float-end">{{list.qty}} {{list.ingredient.unit}}</span></li>
+              {% endfor %}
+            </ol>
+            <p class="card-text h4">Price : <strong class="fw-bold">${{menu.price}}</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+<a type="button" class="btn btn-outline-light mb-5" href="{% url 'menu-item' %}">See More</a>
+{% endblock %}

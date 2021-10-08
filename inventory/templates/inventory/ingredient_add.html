@@ -1,0 +1,20 @@
+{% extends 'inventory/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Django Delight - Add New Ingredient{% endblock %}
+
+{% block content %}
+<h2 class="fw-bold mb-3">Add New Ingredient</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="form-group">
+      {% if request.resolver_match.url_name == 'add-ingredient' %}
+        <button class="btn btn-outline-light mt-5 mb-5" type="submit">Confirm</button>
+      {% else %}
+        <button class="btn btn-outline-light mt-5 mb-5" type="submit">Update</button>
+        <a role="button" type="button" href="{% url 'delete-ingredient' slug=object.slug %}" class="btn btn-outline-light mt-5 mb-5" type="submit">Remove</a>
+      {% endif %} 
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'inventory/base.html' %}
+
+{% block title %}Django Delight - Menu List{% endblock %}
+
+{% block content %}
+<h2 class="fw-bold mb-3">Menu List</h2>
+<div class="row d-flex justify-content-around">
+  {% for menu in menus %}
+    <div class="card mb-3 col-6 bg-dark border border-light m-3" style="max-width: 540px;">
+      <div class="row g-0">
+        <div class="col-md-4">
+          <a href="{{menu.get_absolute_url}}" class="stretched-link">
+            <img src="{{menu.imageURL}}" class="img-fluid rounded-start" style="object-fit: contain; height: 100%" alt="{{menu.name}}" />
+          </a>
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">{{menu.name}}</h5>
+            <ol class="card-text">
+              {% for list in menu.reciperequirement_set.all %}
+                <li>{{list.ingredient.name}}<span class="float-end">{{list.qty}} {{list.ingredient.unit}}</span></li>
+              {% endfor %}
+            </ol>
+            <p class="card-text h4">Price : <strong class="fw-bold">${{menu.price}}</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+<a type="button" class="btn btn-outline-light mb-5" href="{% url 'add-menu' %}">Add New Menu</a>
+{% endblock %}

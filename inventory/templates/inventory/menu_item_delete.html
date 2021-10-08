@@ -1,0 +1,15 @@
+{% extends 'inventory/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Django Delight - Confirm Delete Menu{% endblock %}
+
+{% block content %}
+<h2 class="fw-bold mb-3">Menu Delete Confirmation</h2>
+<form method="POST">
+  {% csrf_token %}
+  <p>Are you sure you want to remove "{{ object }}" from your inventory?</p>
+  <div class="form-group">
+    <button class="btn btn-outline-light mt-5 mb-5" type="submit">Confirm</button>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'inventory/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Django Delight - Record New Purchase{% endblock %}
+
+{% block content %}
+<h2 class="fw-bold mb-3">Record New Purchase</h2>
+{% if not menu_items %}
+  <p>Please re-stock your inventory, it's empty!</p>
+{% else %}
+<form method="POST" class="row g-3">
+  {% csrf_token %}
+  <div class="col-12">
+    <label class="form-label" for="menu_item">Choose Menu</label>
+    <select class="form-select" aria-label="choose-menu" id="menu_item" name="menu_item" required>
+      <option selected disabled>Please select the menu</option>
+      {% for menu_item in menu_items %}
+      <option value="{{menu_item.id}}">{{menu_item.name}}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <button class="btn btn-outline-light mt-5 mb-5" type="submit">Confirm</button>
+  </div>
+</form>
+{% endif %}
+{% endblock %}

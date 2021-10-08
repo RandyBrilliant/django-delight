@@ -1,0 +1,95 @@
+{% extends 'inventory/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Django Delight - Update Menu{% endblock %}
+
+{% block content %}
+<h2 class="fw-bold mb-3">Update Menu</h2>
+<form method="POST" enctype="multipart/form-data" class="row g-3">
+    {% csrf_token %}
+    {{form|crispy}}
+    <h2>Add Recipe to Menu</h2>
+    <button type="button" class="btn btn-outline-light" onclick="addRow()">Add Recipe</button>
+
+    <div id="ingredient_item">
+      {% for ingredient_self in object.reciperequirement_set.all %}
+        <div class="row g-3">
+          <div class="col-md-8">
+            <label class="form-label">Choose Recipe</label>
+            <select class="form-select" aria-label="choose-recipe" id="ingredient" name="ingredient[]" required onchange="updateValue()">
+              {% for ingredient in ingredients %}
+                <option value="{{ingredient.id}}" {% if ingredient_self.ingredient.id == ingredient.id %}selected{% endif %}>{{ingredient.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="ingredient_qty" class="form-label">Quantity</label>
+            <input type="number" class="form-control" id="ingredient_qty" name="ingredient_qty[]" placeholder="0.00" value="{{ingredient_self.qty}}" required>
+          </div>
+          <button type="button" class="btn btn-danger" onClick="removeRow(this)">Remove</button>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="form-group">
+      <button class="btn btn-outline-light mt-5 mb-5" type="submit">Confirm</button>
+    </div>
+</form>
+
+<script>
+  function preview() {
+      frame.src = URL.createObjectURL(event.target.files[0]);
+  }
+  function addRow() {
+    const div = document.createElement('div');
+
+    div.className = 'row g-3';
+
+    div.innerHTML = `
+      <div class="col-md-8">
+        <label class="form-label">Choose Recipe</label>
+        <select class="form-select" aria-label="choose-recipe" id="ingredient" name="ingredient[]" required>
+          <option selected disabled>Choose Ingredient</option>
+          {% for ingredient in ingredients %}
+          <option value="{{ingredient.id}}">{{ingredient.name}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="ingredient_qty" class="form-label">Quantity</label>
+        <input type="number" class="form-control" id="ingredient_qty" name="ingredient_qty[]" placeholder="0.00" required>
+      </div>
+      <button type="button" class="btn btn-danger" onClick="removeRow(this)">Remove</button>
+    `;
+
+    document.getElementById('ingredient_item').appendChild(div);
+  }
+
+  function removeRow(input) {
+    document.getElementById('ingredient_item').removeChild(input.parentNode);
+  }
+
+  // (function updateValue() {
+  //   var selectobject = document.getElementsByClassName("form-select");
+
+  //   var e = document.getElementsByName("ingredient[]");
+  //   console.log(e);
+  //   var values = [];
+  //   // for(var i = 0; i < e.length; i++) {
+  //   //     values.push(e[i].value);
+  //   // }
+  //   console.log(values);
+    
+  //   for (let i=0; i<selectobject.length; i++) {
+      
+  //     for (let o=0; o<selectobject[i].length; o++) {
+  //       if (values.includes(selectobject[i].options[o].value)) {
+  //         console.log("it worked")
+  //         selectobject[i].remove(o);
+  //       }
+  //     }
+  //   }
+  // })();
+  
+</script>
+{% endblock %}
